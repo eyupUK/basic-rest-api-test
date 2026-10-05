@@ -1,5 +1,6 @@
 package dev.eyup.qe.config;
 
+import dev.eyup.qe.filter.CorrelationIdFilter;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
@@ -14,6 +15,7 @@ public class PetStoreApiRequestSpec {
                 .setAccept(ContentType.JSON)
                 .setContentType(ContentType.JSON)
                 .setConfig(LogConfig.configPetApi())
+                .addFilter(new CorrelationIdFilter())
 //                .addHeaders()
 //                .addCookie()
                 .setBasePath("/v3")
