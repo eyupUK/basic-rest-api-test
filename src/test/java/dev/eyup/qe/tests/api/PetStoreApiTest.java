@@ -1,5 +1,6 @@
 package dev.eyup.qe.tests.api;
 
+import dev.eyup.qe.client.PetStoreApiClient;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -8,6 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static dev.eyup.qe.assertions.PetStoreApiErrorAssertion.assertBadRequest;
+import static dev.eyup.qe.config.PetStoreApiRequestSpec.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -87,16 +89,7 @@ public class PetStoreApiTest {
                 }
                 """.formatted(id);
 
-        RequestSpecification request = given()
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .baseUri(baseUri)
-                .body(payLoad);
-
-        Response response =
-                request
-                        .when()
-                        .post("/v3/pet");
+        Response response = new PetStoreApiClient(specWithAuth()).createNewPet();
 
         assertBadRequest(response);
 
