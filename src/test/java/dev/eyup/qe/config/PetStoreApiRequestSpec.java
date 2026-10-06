@@ -1,14 +1,16 @@
 package dev.eyup.qe.config;
 
 import dev.eyup.qe.filter.CorrelationIdFilter;
+import dev.eyup.qe.uath.Domain;
+import dev.eyup.qe.uath.TokenManager;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 
 public class PetStoreApiRequestSpec {
 
-    private static final String token = AuthConfig.getTokenPetStore();
-    private static final String baseUri = AuthConfig.getBaseUriPetStore();
+    private static final String token = new TokenManager(Domain.PETSTORE).getAccessToken();
+    private static final String baseUri = EnvConfig.getBaseUriPetStore();
 
     public static RequestSpecification baseSpec(){
         return  new RequestSpecBuilder()
@@ -16,11 +18,7 @@ public class PetStoreApiRequestSpec {
                 .setContentType(ContentType.JSON)
                 .setConfig(LogConfig.configPetApi())
                 .addFilter(new CorrelationIdFilter())
-//                .addHeaders()
-//                .addCookie()
                 .setBasePath("/v3")
-//                .addParams()
-//                .addQueryParams()
                 .setBaseUri(baseUri)
                 .build();
     }
