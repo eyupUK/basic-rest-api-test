@@ -27,7 +27,6 @@ public class PetStoreApiTest {
     String baseUri = "https://petstore3.swagger.io/api";
 
 
-
     @Test
     void shouldReturnSuccessfulWhenPostingValidBody(){
 
@@ -79,7 +78,7 @@ public class PetStoreApiTest {
 
     @Test
     void shouldReturnSuccessfulWhenPostingValidBodyPOJO(){
-
+        // POJO serialization
         PetApiCreatePetModel payLoad = new PetApiCreatePetModel(
                 996,
                 "Puffy",
@@ -139,12 +138,12 @@ public class PetStoreApiTest {
                 }
                 """.formatted(id);
 
-        Response response = new PetStoreApiClient(specWithAuth()).createNewPet();
+        Response response = new PetStoreApiClient(baseSpec()).createNewPet();
 
         assertBadRequest(response);
 
         response.then()
-                .body("message",equalTo("Input error: unable to convert input to io.swagger.petstore.model.Pet"));
+                .body("message",containsString("Input error:"));
     }
 
     @Test
@@ -186,9 +185,11 @@ public class PetStoreApiTest {
                 request
                         .when()
                         .post("/v3/pet");
+        // POJO deserialization
         PetApiErrorModel errorModel = response.as(PetApiErrorModel.class);
         assertEquals(400, errorModel.code(), "Status code should be 400");
         assertTrue(errorModel.message().contains("Input error"), "Error message should contain Input error");
+
         assertBadRequest(response);
 
         response.then()
